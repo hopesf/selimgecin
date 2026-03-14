@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 'use strict';
 import {got} from 'got';
 import chalk from 'chalk';
