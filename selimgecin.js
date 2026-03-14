@@ -3,7 +3,7 @@
 import {got} from 'got';
 import chalk from 'chalk';
 import ww from 'word-wrap';
-import iq from 'inquirer';
+import search from '@inquirer/search';
 import opn from 'open';
 import img from 'terminal-image';
 
@@ -82,31 +82,39 @@ ${chalk.bold("📋 Summary")}
   console.log('\n' + chalk.dim('  Ask me anything! Use the menu below to learn more.'));
   console.log(chalk.dim('  Tip: write ' + chalk.italic('help') + ' to see all available commands.\n'));
 
-  const ask = () => iq.prompt([
-    {
-      type: 'list',
-      message: 'What do you want to know?',
-      name: 'topic',
-      choices: [
-        { name: `💼  Work experience`,                                           value: 'experience' },
-        { name: `🛠   Tech stack`,                                               value: 'stack' },
-        { name: `🚀  Projects`,                                                  value: 'projects' },
-        { name: chalk.gray(`💻  Open source work  (${chalk.bold('GitHub')})`),          value: 'github' },
-        { name: chalk.red(`🦊  GitLab profile  (${chalk.bold('GitLab')})`),             value: 'gitlab' },
-        { name: chalk.blue(`🏹  Full CV  (${chalk.bold('LinkedIn')})`),                 value: 'linkedin' },
-        { name: chalk.dim(`📖  Help  (all commands)`),                              value: 'help' },
-        { name: chalk.red('👋  That\'s enough, bye!\n'),                            value: 'exit' },
-      ]
-    }
-  ]).then(({ topic }) => {
-    if (topic === 'exit')     { console.log(chalk.dim('\nBye! 👋\n')); process.exit(); }
-    if (topic === 'github')   { opn('https://github.com/hopesf');              return ask(); }
-    if (topic === 'gitlab')   { opn('https://gitlab.com/selimgecin');           return ask(); }
-    if (topic === 'linkedin') { opn('https://linkedin.com/in/selim-gecin');      return ask(); }
-    if (topic === 'help')     { console.log(help);                               return ask(); }
-    if (sections[topic])      { console.log(sections[topic]); }
-    return ask();
-  }).catch(() => {});
+  const choices = [
+    { name: `💼  Work experience`,                                                 value: 'experience' },
+    { name: `🛠   Tech stack`,                                                     value: 'stack' },
+    { name: `🚀  Projects`,                                                        value: 'projects' },
+    { name: chalk.gray(`💻  Open source work  (${chalk.bold('GitHub')})`),        value: 'github' },
+    { name: chalk.red(`🦊  GitLab profile  (${chalk.bold('GitLab')})`),           value: 'gitlab' },
+    { name: chalk.blue(`🏹  Full CV  (${chalk.bold('LinkedIn')})`),               value: 'linkedin' },
+    { name: chalk.dim(`📖  Help  (all commands)`),                                 value: 'help' },
+    { name: chalk.red(`👋  That's enough, bye!`),                                  value: 'exit' },
+  ];
+
+  const ask = async () => {
+    try {
+      const topic = await search({
+        message: 'What do you want to know? (type to filter)',
+        source(input) {
+          if (!input) return choices;
+          const q = input.toLowerCase();
+          return choices.filter(c => {
+            const plain = c.value + ' ' + c.name.replace(/\x1b\[[\d;]*m/g, '');
+            return plain.toLowerCase().includes(q);
+          });
+        },
+      });
+      if (topic === 'exit')     { console.log(chalk.dim('\nBye! 👋\n')); process.exit(); }
+      if (topic === 'github')   { opn('https://github.com/hopesf');          return ask(); }
+      if (topic === 'gitlab')   { opn('https://gitlab.com/selimgecin');       return ask(); }
+      if (topic === 'linkedin') { opn('https://linkedin.com/in/selim-gecin'); return ask(); }
+      if (topic === 'help')     { console.log(help);                          return ask(); }
+      if (sections[topic])      { console.log(sections[topic]); }
+      return ask();
+    } catch {}
+  };
 
   ask();
 }).catch(e => console.log(e));
