@@ -1,0 +1,33 @@
+{
+  "name": "selimgecin",
+  "version": "0.0.1",
+  "description": "Selim Gecin About",
+  "type": "module",
+  "bin": {
+    "selimgecin": "selimgecin.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hopesf/selimgecin.git"
+  },
+  "keywords": [
+    "selimgecin",
+    "hopesf",
+    "selimcoder",
+    "selimgeçin"
+  ],
+  "author": "Selim Geçin - <gecin18@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/hopesf/selimgecin/issues"
+  },
+  "homepage": "https://github.com/hopesf/selimgecin#readme",
+  "dependencies": {
+    "chalk": "^5.6.2",
+    "got": "^14.6.6",
+    "inquirer": "^13.3.0",
+    "open": "^11.0.0",
+    "terminal-image": "^4.2.0",
+    "word-wrap": "^1.2.5"
+  }
+}
