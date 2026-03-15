@@ -4,7 +4,16 @@
   "description": "Selim Gecin About",
   "type": "module",
   "bin": {
-    "selimgecin": "selimgecin.js"
+    "selimgecin": "dist/index.js"
+  },
+  "main": "dist/index.js",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "prepare": "npm run build",
+    "postbuild": "node -e \"const fs=require('fs'); const f='dist/index.js'; let c=fs.readFileSync(f,'utf8'); if(!c.startsWith('#!/usr/bin/env node')) { c='#!/usr/bin/env node\\n'+c; fs.writeFileSync(f,c); }\""
   },
   "repository": {
     "type": "git",
@@ -30,5 +39,9 @@
     "open": "^11.0.0",
     "terminal-image": "^4.2.0",
     "word-wrap": "^1.2.5"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "typescript": "^5.8.2"
   }
 }
